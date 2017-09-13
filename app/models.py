@@ -193,17 +193,20 @@ class Post(db.Model):
     @staticmethod
     def generate_fake(count=100):
         from random import seed, randint
-        import  forgery_py
+        import forgery_py
 
         seed()
         user_count = User.query.count()
         for i in range(count):
             u = User.query.offset(randint(0, user_count - 1)).first()
-            p = Post(body=forgery_py.lorem_ipsum.sentence()(randint(1, 5)),
+            p = Post(body=forgery_py.lorem_ipsum.sentences(randint(1, 5)),
                      timestamp=forgery_py.date.date(True),
                      author=u)
             db.session.add(p)
             db.session.commit()
+
+    def __repr__(self):
+        return '<Post, %r>' %self.id
 
 class AnonymousUser(AnonymousUserMixin):
     def can(self, permissions):
