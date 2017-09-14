@@ -208,7 +208,7 @@ class User(UserMixin, db.Model):
     def unfollow(self, user):
         f = self.followed.filter_by(followed_id=user.id).first()
         if f:
-            self.followed.remove(f)
+            db.session.delete(f)
 
     def is_following(self, user):
         return self.followed.filter_by(
