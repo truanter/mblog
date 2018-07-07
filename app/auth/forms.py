@@ -3,12 +3,14 @@ from wtforms import StringField, SubmitField, PasswordField, BooleanField, Valid
 from wtforms.validators import Required, Length, Email, Regexp, EqualTo
 from ..models import User
 
+
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[Required(), Length(1, 64),
                                              Email()])
     password = PasswordField('Password', validators=[Required()])
     remember_me = BooleanField('Keep me logged in')
     submit = SubmitField('Log in')
+
 
 class RegistrationForm(FlaskForm):
     email = StringField('Email', validators=[Required(),Length(1,64),
@@ -30,6 +32,7 @@ class RegistrationForm(FlaskForm):
         if User.query.filter_by(username = field.data).first():
             raise ValidationError('Username already in use.')
 
+
 class ChangePasswordForm(FlaskForm):
     old_password = PasswordField('Old password', validators=[Required()])
     password = PasswordField('New password', validators=[
@@ -37,10 +40,12 @@ class ChangePasswordForm(FlaskForm):
     password2 = PasswordField('Confirm new password', validators=[Required()])
     submit = SubmitField('Update Password')
 
+
 class PasswordResetRequestForm(FlaskForm):
     email = StringField('Email', validators=[Required(),Length(1,64),
                                              Email()])
     submit = SubmitField('Reset Password')
+
 
 class PasswordResetForm(FlaskForm):
     email = StringField('Email', validators=[Required(), Length(1, 64),
@@ -53,6 +58,7 @@ class PasswordResetForm(FlaskForm):
     def validate_email(self, field):
         if User.query.filter_by(email=field.data).first() is None:
             raise ValidationError('Unknown email address.')
+
 
 class ChangeEmailForm(FlaskForm):
     email = StringField('New Email', validators=[Required(), Length(1,64),

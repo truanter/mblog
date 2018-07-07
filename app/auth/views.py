@@ -6,6 +6,7 @@ from ..models import User
 from . import auth
 from .. import db
 
+
 @auth.before_app_request
 def before_request():
     if current_user.is_authenticated:
@@ -15,11 +16,13 @@ def before_request():
             and request.endpoint != 'static':
             return redirect(url_for('auth.unconfirmed'))
 
+
 @auth.route('/unconfirmed')
 def unconfirmed():
     if current_user.is_anonymous or current_user.confirmed:
         return redirect(url_for('main.index'))
     return render_template('auth/unconfirmed.html')
+
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
@@ -32,12 +35,14 @@ def login():
         flash('Invalid username or password.')
     return render_template('auth/login.html', form=form)
 
+
 @auth.route('/logout')
 @login_required
 def logout():
     logout_user()
     flash('You have been logged out.')
     return redirect(url_for('main.index'))
+
 
 @auth.route('/register', methods=['GET', 'POST'])
 def register():
@@ -55,6 +60,7 @@ def register():
         return redirect(url_for('main.index'))
     return render_template('auth/register.html', form=form)
 
+
 @auth.route('/confirm/<token>')
 @login_required
 def confirm(token):
@@ -66,6 +72,7 @@ def confirm(token):
         flash('The confirmation link is invalid or has expired.')
     return redirect(url_for('main.index'))
 
+
 @auth.route('/confirm')
 @login_required
 def resend_confirmation():
@@ -74,6 +81,7 @@ def resend_confirmation():
                'auth/email/confirm', user=current_user, token=token)
     flash('A new confirmation email has been sent to you by email.')
     return redirect(url_for('main.index'))
+
 
 @auth.route('/change-password', methods=['GET', 'POST'])
 @login_required
@@ -88,6 +96,7 @@ def change_password():
         else:
             flash('Invalid password.')
     return render_template("auth/change_password.html", form=form)
+
 
 @auth.route('/reset', methods=['GET', 'POST'])
 def password_reset_request():
@@ -107,6 +116,7 @@ def password_reset_request():
         return redirect(url_for('auth.login'))
     return render_template('auth/reset_password.html', form=form)
 
+
 @auth.route('/reset/<token>', methods=['GET', 'POST'])
 def password_reset(token):
     if not current_user.is_anonymous:
@@ -122,6 +132,7 @@ def password_reset(token):
         else:
             return redirect(url_for('main.index'))
     return render_template('auth/reset_password.html', form=form)
+
 
 @auth.route('/change-email', methods=['GET', 'POST'])
 @login_required
@@ -140,6 +151,7 @@ def change_email_request():
         else:
             flash('Invalid email or password.')
     return render_template("auth/change_email.html", form=form)
+
 
 @auth.route('/change-email/<token>')
 @login_required
